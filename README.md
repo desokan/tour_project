@@ -1,3 +1,3 @@
-# The Glide Tour project is a backend project for a website that is into selling tours.
+# Glide_Tour 
 
-- The project exposes API endpoints that the frontend can consume from.
+## The Glide_Tour project is the backend project for a website that is into selling tours. The project exposes API endpoints that the frontend can consume from.
