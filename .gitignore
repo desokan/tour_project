@@ -17,4 +17,4 @@
 .env.test.local
 .env.production.local
 
-.md
+./md
