@@ -150,22 +150,8 @@ app.use((err, req, res, next) => {
 - Test this in postman by trying to access `127.0.0.1:3000/api/tours`, without the `v1`.
 - We could now go ahead and try to implement this kind of stuff everywhere in all our handlers.
 - For example, in `tourController.js`. So replacing `res.status()` with the type error we just created.
-
-But what I want to do for now is to create our own error class. So that we don't have to write all of this code and instead have a more like streamlined class. So that's a common practice, and so let's do that in the next video.
-
-```js => app.js
-app.use("/api/v1/tours", tourRouter);
-app.use("/api/v1/users", userRouter);
-
-// 001
-app.all("*", (req, res, next) => {
-  // 002
-  res.status(404).json({
-    status: "fail",
-    message: `Can't find ${req.originalUrl} on this server!`,
-  });
-});
-```
+- But what I want to do for now is to create our own error class.
+- So that we don't have to write all of this code and instead have a more like streamlined class.
 
 ## 115. xxx BETTER ERRORS AND REFACTORING
 
