@@ -17,4 +17,5 @@
 .env.test.local
 .env.production.local
 
-zzz-notes.md
+zzz_notes.md
+*.md
