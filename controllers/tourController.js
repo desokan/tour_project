@@ -1,5 +1,6 @@
 import Tour from "./../models/tourModel.js";
 import APIFeatures from "../utils/apiFeatures.js";
+import { catchAsync } from "../utils/catchAsync.js";
 
 // CHEAPEST 5 TOUR
 export const aliasTopTours = (req, res, next) => {
@@ -59,33 +60,15 @@ export const getTour = async (req, res) => {
 };
 
 // CREAT ONE DOCUMENT
-export const createTour = async (req, res) => {
-  try {
-    const newTour = await Tour.create(req.body);
-
-    res.status(201).json({
-      status: "success",
-      data: {
-        tour: newTour,
-      },
-    });
-  } catch (err) {
-    if (err.name === "MongoServerError" && err.code === 11000) {
-      const fieldName = Object.keys(err.keyValue)[0];
-      const duplicateValue = err.keyValue[fieldName];
-      const errorMessage = `A document with the ${fieldName}: "${duplicateValue}" already exists.`;
-
-      return res.status(400).json({
-        status: "fail",
-        message: errorMessage,
-      });
-    }
-    res.status(400).json({
-      status: "fail",
-      message: err.message,
-    });
-  }
-};
+export const createTour = catchAsync(async (req, res, next) => {
+  const newTour = await Tour.create(req.body);
+  res.status(201).json({
+    status: "success",
+    data: {
+      tour: newTour,
+    },
+  });
+});
 
 // UPDATE ONE DOCUMENT WITH PATCH
 export const updateTour = async (req, res) => {
