@@ -11,34 +11,23 @@ export const aliasTopTours = (req, res, next) => {
 };
 
 // GET ALL DOCUMENTS
-export const getAllTours = async (req, res) => {
-  try {
-    const features = new APIFeatures(Tour.find(), req.query)
-      .filter()
-      .sort()
-      .limitFields()
-      .paginate();
+export const getAllTours = catchAsync(async (req, res, next) => {
+  const features = new APIFeatures(Tour.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
 
-    const tours = await features.queryFind;
+  const tours = await features.queryFind;
 
-    const totalDocuments = await Tour.countDocuments();
-
-    res.status(200).json({
-      status: "success",
-      totalDocuments,
-      requestedAt: req.requestTime,
-      results: tours.length,
-      data: {
-        tours,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: "fail",
-      message: err.message,
-    });
-  }
-};
+  res.status(200).json({
+    status: "success",
+    results: tours.length,
+    data: {
+      tours,
+    },
+  });
+});
 
 // GET ONE DOCUMENT
 export const getTour = async (req, res) => {
