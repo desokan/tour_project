@@ -1,7 +1,4 @@
-import User from "../models/userModel";
-import { catchAsync } from "../utils/catchAsync.js";
-
-import User from "../models/userModel";
+import User from "../models/userModel.js";
 import { catchAsync } from "../utils/catchAsync.js";
 
 export const signup = catchAsync(async (req, res, next) => {

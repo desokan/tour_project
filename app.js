@@ -1,10 +1,11 @@
 import express from "express";
 import morgan from "morgan";
 import { requestTime } from "./middleware/reqMiddleware.js";
-import tourRouter from "./routes/tourRoutes.js";
 import { getPublicPath } from "./utils/pathUtils.js";
 import AppError from "./utils/appError.js";
 import { globalErrorHandler } from "./controllers/errorController.js";
+import tourRouter from "./routes/tourRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ if (process.env.NODE_ENV === "development") {
 
 // ROUTES
 app.use("/api/v1/tours", tourRouter);
+app.use("/api/v1/users", userRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
