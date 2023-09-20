@@ -5,11 +5,12 @@ import User from "../models/userModel";
 import { catchAsync } from "../utils/catchAsync.js";
 
 export const signup = catchAsync(async (req, res, next) => {
+  const { name, email, password, passwordConfirm } = req.body;
   const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
+    name,
+    email,
+    password,
+    passwordConfirm,
   });
 
   res.status(201).json({
