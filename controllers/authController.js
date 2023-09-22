@@ -17,6 +17,7 @@ export const signup = catchAsync(async (req, res, next) => {
     email,
     password,
     passwordConfirm,
+    passwordChangedAt: Date.now(),
   });
 
   newUser.password = undefined;
@@ -70,12 +71,14 @@ export const protect = catchAsync(async (req, res, next) => {
   }
 
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  console.log("decoded", decoded);
 
   const currentUser = await User.findById(decoded.id);
+  console.log("currentUser", currentUser);
   if (!currentUser) {
     return next(
       new AppError(
-        "The user belonging to this token does no longer exist.",
+        "The user belonging to this token no longer exist.",
         401
       )
     );
