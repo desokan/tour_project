@@ -47,7 +47,7 @@ export const login = catchAsync(async (req, res, next) => {
 
   // 3) If everything ok, send token to client
   const token = signToken(user._id);
-  
+
   res.status(201).json({
     status: "success",
     token,
@@ -75,10 +75,7 @@ export const protect = catchAsync(async (req, res, next) => {
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
     return next(
-      new AppError(
-        "The user belonging to this token no longer exist.",
-        401
-      )
+      new AppError("The user belonging to this token no longer exist.", 401)
     );
   }
 
@@ -102,3 +99,15 @@ export const restrictTo = (...roles) => {
     next();
   };
 };
+
+export const forgotPassword = catchAsync(async (req, res, next) => {
+  // 1) Get user based on POSTed email
+  const user = await User.findOne({ email: req.body.email });
+  console.log("1111111111user", user);
+  if (!user) {
+    return next(new AppError("There is no user with email address.", 404));
+  }
+  // 2) Generate the random reset token
+  const resetToken = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+});
