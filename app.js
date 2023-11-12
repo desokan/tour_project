@@ -6,6 +6,7 @@ import { getPublicPath } from "./utils/pathUtils.js";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import xss from "xss-clean";
+import hpp from "hpp";
 
 import AppError from "./utils/appError.js";
 import { globalErrorHandler } from "./controllers/errorController.js";
@@ -35,6 +36,18 @@ app.use("/api", limiter);
 app.use(express.json({ limit: "10kb" }));
 app.use(mongoSanitize());
 app.use(xss());
+app.use(
+  hpp({
+    whitelist: [
+      "duration",
+      "ratingsQuantity",
+      "ratingsAverage",
+      "maxGroupSize",
+      "difficulty",
+      "price",
+    ],
+  })
+);
 
 // ROUTES
 app.use("/api/v1/tours", tourRouter);
