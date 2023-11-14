@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import slugify from "slugify";
-import validator from 'validator'
 
 const tourSchema = new mongoose.Schema(
   {
@@ -8,11 +7,9 @@ const tourSchema = new mongoose.Schema(
       type: String,
       required: [true, "A tour must have a name"],
       unique: true,
-      // trim only works for strings. It removes all the white spaces before and after a string.
       trim: true,
       maxlength: [40, "A tour name must have less or equal than 40 characters"],
       minlength: [10, "A tour name must have more or equal than 10 characters"],
-      // validate: [validator.isAlpha, 'Tour name must only contain characters'],
     },
     slug: String,
     duration: {
@@ -54,7 +51,7 @@ const tourSchema = new mongoose.Schema(
           console.log("this.price", this.price);
           return val < this.price;
         },
-        message: `Discount price ({VALUE}) should be below regular price`
+        message: `Discount price ({VALUE}) should be below regular price`,
       },
     },
     summary: {
@@ -80,8 +77,38 @@ const tourSchema = new mongoose.Schema(
     secretTour: {
       type: Boolean,
       default: false,
-      // select: false,
     },
+
+    startLocation: {
+      // GeoJSON
+      type: {
+        type: String,
+        default: "Point",
+        enum: ["Point"],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: "Point",
+          enum: ["Point"],
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number,
+      },
+    ],
+    guides: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
@@ -118,6 +145,15 @@ tourSchema.pre("find", function (next) {
 tourSchema.pre(/^find/, function (next) {
   this.find({ secretTour: { $ne: true } });
   this.start = Date.now();
+  next();
+});
+
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "guides",
+    select: "-__v -passwordChangedAt",
+  });
+
   next();
 });
 
